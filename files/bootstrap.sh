@@ -30,7 +30,9 @@ if [ ! -f "/etc/keystone/initial" ]; then
         echo "credential_setup..."
         keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 	# Populate keystone database
-        echo "bootstrap..."
+	#change admin project to kube-system
+    
+    echo "bootstrap..."
 	keystone-manage bootstrap --bootstrap-password $KEYSTONE_ADMIN_PASSWORD \
 	  --bootstrap-admin-url http://$HOSTNAME:35357/v3/ \
 	  --bootstrap-internal-url http://$HOSTNAME:5000/v3/ \
@@ -38,6 +40,8 @@ if [ ! -f "/etc/keystone/initial" ]; then
 	  --bootstrap-region-id RegionOne
         echo "touch init file"
         touch /etc/keystone/initial
+	
+	mysql -uroot -p$KEYSTONE_DB_ROOT_PASSWD_IF_REMOTED -h $KEYSTONE_DB_HOST < /root/project.sql
 
 fi
 
@@ -46,7 +50,7 @@ echo "set openrc"
 cat > /root/openrc <<EOF
 export OS_PROJECT_DOMAIN_NAME=default
 export OS_USER_DOMAIN_NAME=default
-export OS_PROJECT_NAME=admin
+export OS_PROJECT_NAME=kube-system
 export OS_USERNAME=admin
 export OS_PASSWORD=${KEYSTONE_ADMIN_PASSWORD}
 export OS_AUTH_URL=$HTTP://${HOSTNAME}:35357/v3
@@ -55,6 +59,7 @@ export OS_IMAGE_API_VERSION=2
 EOF
 
 /usr/sbin/httpd
+
 while true;do
  sleep 60
 done

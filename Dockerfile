@@ -22,6 +22,7 @@ LABEL description="Openstack Keystone Docker Image Supporting HTTP/HTTPS"
 
 COPY files/etc/keystone.conf /etc/keystone/keystone.conf
 COPY files/keystone.sql /root/keystone.sql
+COPY files/project.sql /root/project.sql
 COPY files/bootstrap.sh /usr/local/bin/bootstrap.sh
 COPY files/wsgi-keystone.conf /etc/httpd/conf.d/
 RUN chmod 750 /usr/local/bin/bootstrap.sh
