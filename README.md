@@ -1,1 +1,2 @@
 # keystone-container
+容器化Keystone，并修改admin用户的默认Project 为kube-systm，将kubernetes dashboard的认证交由keystone完成
